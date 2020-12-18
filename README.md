@@ -9,10 +9,10 @@ python3 main.py
 For testing: provide relative image path in the terminal when asked
 Eg: 'dataset/CT_NonCOVID/0.jpg'
 
-### Original Paper Results
+## Original Paper Results
 
 ![Arch_Image](https://github.com/AmitProspeed/covid_19_detection_from_ct_scans/blob/main/OriginalResults.png)
-## Our Results:
+## Results:
 
 ### DenseNet(Best Result)
 
@@ -62,7 +62,7 @@ Recall: 0.8825210084033615 + 0.039267712587939076
 Presicion: 0.8284741059131303 + 0.039821328984618126  
 f1 score: 0.8533989375325175 + 0.02370271903395987  
 
-### Code Screenshot
+## Code Screenshot
 
 ![Arch_Image](https://github.com/AmitProspeed/covid_19_detection_from_ct_scans/blob/main/code.png)
 
