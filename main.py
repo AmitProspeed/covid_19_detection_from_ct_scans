@@ -3,11 +3,14 @@ import numpy as np
 import tensorflow as tf
 import os
 import sys
+import cv2
 from sklearn.svm import NuSVC
 from sklearn.model_selection import cross_val_score, StratifiedKFold, cross_val_predict
 from sklearn.metrics import confusion_matrix
 import time
 import traceback
+import bayes_optimization
+from sklearn.model_selection import GridSearchCV
 
 data_path = 'dataset/'
 
@@ -19,18 +22,22 @@ def generate_data():
     y_data = []
     #Add positive covid data
     for fileName in covid_data:
-        im = Image.open(data_path + 'CT_COVID/' + fileName).convert("RGB")
+        #im = Image.open(data_path + 'CT_COVID/' + fileName).convert("RGB")
+        im = cv2.imread(data_path + 'CT_COVID/' + fileName, cv2.IMREAD_COLOR)
         resize = (224,224)
-        im = im.resize(resize)
+        #im = im.resize(resize)
+        im = cv2.resize(im, resize)
         img_arr = np.array(im)
         x_data.append(img_arr/255)      #normalize data
         y_data.append(1)
     
     #Add negative covid data
     for fileName in non_covid_data:
-        im = Image.open(data_path + 'CT_NonCOVID/' + fileName).convert("RGB")
+        #im = Image.open(data_path + 'CT_NonCOVID/' + fileName).convert("RGB")
+        im = cv2.imread(data_path + 'CT_NonCOVID/' + fileName, cv2.IMREAD_COLOR)
         resize = (224,224)
-        im = im.resize(resize)
+        #im = im.resize(resize)
+        im = cv2.resize(im, resize)
         img_arr = np.array(im)
         x_data.append(img_arr/255)      #normalize data
         y_data.append(0)
@@ -121,6 +128,8 @@ if __name__ == "__main__":
         print ("Loading data...")
         x, y = generate_data()
         print ("Data loading and pre-processing done.")
+        #params = bayes_optimization.bayesOpt(x, y)
+        #print(params)
         #get model
         model_dict = {
             1: "DenseNet",
@@ -142,19 +151,34 @@ if __name__ == "__main__":
 
         print ("Initializing feature model...")
         feature_model = get_model(modelName)     #tensorflow denseNet121, InceptionV3, ResNet50V2, ResNet50V1, MobileNetV1
+        #set nu-SVM classifier with optimal params from paper
+        print ("Initializing classifier...")
+        # defining parameter range 
+        #param_grid = {'nu': [0.5],  
+                    #'gamma': np.arange(0.009, 0.01+0.0000, 0.0001).tolist(),
+                    #'max_iter': [163],
+                    #'kernel': ['rbf']} 
+  
+        #classifier = GridSearchCV(NuSVC(), param_grid, cv = 5, verbose=3, refit=True, n_jobs=-1)
+        #print( classifier.best_score_ )
+        #print( classifier.best_params_ )
         #extract features and reorgranize X,Y data
         print ("Extracting features...")
         x = extract_features(x, feature_model)      #replacing with features computed from deep learning model
-        #set nu-SVM classifier with optimal params from paper
-        print ("Initializing classifier...")
         classifier = NuSVC(nu=0.4, kernel='rbf', gamma=0.0098, shrinking=True, tol=0.00001,
-            max_iter=163, random_state=1, class_weight='balanced', probability=True)
-        #evaluate classifier model on current dataset using K fold cross validation technique
-        print ("Evaluating model performance...")
-        evaluate_model(classifier, x, y)
+          max_iter=163, random_state=603, class_weight='balanced', probability=True)
+        
         #train and fit
         print ("Training started...")
         classifier.fit(x, y)
+
+        #print (classifier.best_score_)
+        #print (classifier.best_params_)
+
+        #evaluate classifier model on current dataset using K fold cross validation technique
+        print ("Evaluating model performance...")
+        evaluate_model(classifier, x, y)
+
         #test model with test data covid prediction
         while True:
             predict(feature_model, classifier)

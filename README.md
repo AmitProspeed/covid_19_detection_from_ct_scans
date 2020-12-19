@@ -2,7 +2,7 @@
 
 ## Commands to run code
 
-pip3 install tensorflow sklearn Pillow numpy scipy
+pip3 install tensorflow sklearn Pillow numpy scipy opencv-contrib-python
 
 python3 main.py
 
@@ -12,6 +12,10 @@ Eg: 'dataset/CT_NonCOVID/0.jpg'
 ## Original Paper Results
 
 ![Arch_Image](https://github.com/AmitProspeed/covid_19_detection_from_ct_scans/blob/main/OriginalResults.png)
+
+## Server Results
+
+![Arch_Image](https://github.com/AmitProspeed/covid_19_detection_from_ct_scans/blob/main/server_result.png)
 ## Results:
 
 ### DenseNet(Best Result)
