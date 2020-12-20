@@ -1,12 +1,18 @@
 # covid_19_detection_from_ct_scans
 
+## Verions
+
+Tensorflow 2, CUDA 11.2, Python 3.6
+
 ## Commands to run code
+
+sudo apt install nvidia-cuda-toolkit OR latest CUDA installation - https://medium.com/@exesse/cuda-10-1-installation-on-ubuntu-18-04-lts-d04f89287130
 
 pip3 install tensorflow sklearn Pillow numpy scipy opencv-contrib-python
 
-python3 main.py
+python3 main.py [Add argument 'gridsearch' or 'bayesopt' for parameter optimization else default optimal parameters will be used]
 
-For testing: provide relative image path in the terminal when asked
+For testing: provide relative image path in the terminal when asked to get Covid/No-Covid result
 Eg: 'dataset/CT_NonCOVID/0.jpg'
 
 ## Original Paper Results
@@ -18,13 +24,21 @@ Eg: 'dataset/CT_NonCOVID/0.jpg'
 ![Arch_Image](https://github.com/AmitProspeed/covid_19_detection_from_ct_scans/blob/main/server_result.png)
 ## Results:
 
-### DenseNet(Best Result)
+### DenseNet(Best Result using PIL)
 
 Accuracy: **0.8954414414414416** + 0.017800133050865665  
 Area Under Curve: **0.9451266968325791** + 0.01732083766849508  
 Recall: **0.9055462184873949** + 0.04035573753343885  
 Presicion: **0.8790384397701472** + 0.04465206377630674  
-f1 score: **0.8903512693210945** + 0.016475958527555734  
+f1 score: **0.8903512693210945** + 0.016475958527555734
+
+####(Using CV2)
+
+Accuracy: 0.8793513513513513 + 0.023965752151666627  
+Area Under Curve: 0.9430948071536307 + 0.020517343306562345  
+Recall: 0.8854621848739495 + 0.04221474385265532  
+Presicion: 0.8644155410873676 + 0.046364010511680126  
+f1 score: 0.873116156828749 + 0.023142506938130365  
 
 ### InceptionV3
 
